@@ -122,7 +122,7 @@
                         if (pharms[i].remain_stat) {
                         console.log(pharms[i].lat, pharms[i].lng)
                         var circle = L.circle(L.latLng(pharms[i].lat, pharms[i].lng), 12, {color: stateColors[pharms[i].remain_stat], fillColor: stateColors[pharms[i].remain_stat], fillOpacity:0.5}).addTo(map);
-                        var popupContent= "<h3>"+ pharms[i].name + "</h3><p>" + stateMention[pharms[i].remain_stat] + "</p><p> *햣 기준 시간:" + pharms[i].stock_at + "</p>"
+                        var popupContent= "<h3>"+ pharms[i].name + "</h3><p>" + stateMention[pharms[i].remain_stat] + "</p><p> *기준 시간:" + pharms[i].stock_at + "</p>"
                         circle.bindPopup(popupContent).openPopup();
                         }
                     }
