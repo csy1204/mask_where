@@ -1,0 +1,171 @@
+<html>
+
+<head>
+	<!-- Mobile 화면 : Viewport 설정 -->
+	<meta http-equiv="Content-Type" content="text/html;charset=utf-8">
+	<meta name="viewport" content="user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, width=device-width">
+	<meta name="robots" content="noindex">
+	<meta name="format-detection" content="telephone=no">
+	<!--STEP 1: CSS 추가하기 -->
+	<!--CDN 방식 -->
+	<!--<link rel="stylesheet" href="https://unpkg.com/leaflet@1.3.3/dist/leaflet.css"/>-->
+	<!-- Download 방식 -->
+	<link rel="stylesheet" href="css/leaflet@1.3.3/leaflet.css"/>
+	<!--STEP 3: 지도 영역 관련 CSS 추가하기 -->
+	<link rel="stylesheet" href="css/main.css"/>
+	<!--STEP 2: JS 추가하기 -->
+	<!--CDN 방식 -->
+	<!--<script src="https://unpkg.com/leaflet@1.3.3/dist/leaflet.js"></script>-->
+	<!-- Download 방식 -->
+    <script src="js/leaflet@1.3.3/leaflet.js"></script>
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+	 <!-- Leaflet Plugins: Leaflet.KoreanTmsProviders 추가  -->
+	<script src="js/KoreanTmsProviders/lib/proj4.js"></script>
+	<script src="js/KoreanTmsProviders/lib/proj4leaflet.js"></script>
+    <script src="js/KoreanTmsProviders/src/Leaflet.KoreanTmsProviders.js"></script>  
+    <!-- 수량 상태정보를 색상으로 표시할 경우 녹색(100개 이상) plenty /노랑색(30~99개) some /빨강색(2~29개) few /회색(0~1개) empty을 준수해주시기 바랍니다. -->
+    <style>
+        .plenty {
+            padding: 10px;
+            border-radius: 100%;
+            color: green;
+            z-index: 300;
+        }
+
+        .some {
+            padding: 10px;
+            border-radius: 100%;
+            color: yellow;
+            z-index: 300;
+        }
+
+        .few {
+            padding: 10px;
+            border-radius: 100%;
+            color: red;
+            z-index: 300;
+        }
+
+        .empty {
+            padding: 10px;
+            border-radius: 100%;
+            color: grey;
+            z-index: 300;
+        }
+    </style>
+</head>
+
+<body>
+	<!-- 배경지도 영역 추가하기-->
+	<div id="map" class="map"></div>
+	<script>
+
+        var stateColors = {
+            plenty: "green",
+            some: "yellow",
+            few:"red",
+            empty:"grey"
+        }
+
+        var stateMention = {
+            plenty: "100개 이상",
+            some: "30~99개",
+            few:"2~29개",
+            empty:"0~1개"
+        }
+
+        // window.onload = function() {
+        var startPos;
+        var geoSuccess = function(position) {
+            startPos = position;
+            console.log(startPos);
+        };
+        navigator.geolocation.getCurrentPosition(geoSuccess);
+        // };
+
+
+        //         addr: "서울특별시 종로구 종로41길 47 (종로6가)"
+// code: "11810050"
+// created_at: "2020/03/10 20:10:00"
+// lat: 37.5733119
+// lng: 127.0058906
+// name: "영화약국"
+// remain_stat: "empty"
+// stock_at: "2020/03/10 09:09:00"
+
+        navigator.geolocation.getCurrentPosition(function(pos) {
+            console.log(pos);
+            latitude = pos.coords.latitude;
+            longitude = pos.coords.longitude;
+            // alert("현재 위치는 : " + latitude + ", "+ longitude);
+            alert("현재 위치는 : " + latitude + ", "+ longitude);
+
+            $.ajax({
+                url: "https://8oi9s0nnth.apigw.ntruss.com/corona19-masks/v1/storesByGeo/json",
+                method: "GET",
+                data: {
+                    lat:latitude,
+                    lng:longitude,
+                    m:1000
+                },
+                headers: {          
+                    Accept: "application/json"        
+                }, 
+                success : function(response) {  
+                    var pharms = response.stores;
+                    console.log(response.stores);
+                    for (var i = 0; i < pharms.length; i++) {
+                        if (pharms[i].remain_stat) {
+                        console.log(pharms[i].lat, pharms[i].lng)
+                        var circle = L.circle(L.latLng(pharms[i].lat, pharms[i].lng), 10, {color: stateColors[pharms[i].remain_stat], fillColor: stateColors[pharms[i].remain_stat], fillOpacity:0.5}).addTo(map);
+                        var popupContent= "<h3>"+ pharms[i].name + "</h3><p>" + stateMention[pharms[i].remain_stat] + "</p><p> *기준 시간:" + pharms[i].stock_at + "</p>"
+                        circle.bindPopup(popupContent).openPopup();
+                        }
+                    }
+                    map.setView(L.latLng(latitude, longitude), 13);
+
+                }   
+            });
+
+        });
+
+		var map = new L.Map('map', {
+			  center: new L.LatLng(37.5740321, 127.0078127), //중심점 : 김천 위경도 좌표
+			  zoom: 8,	//Leaflet.KoreanTmsProviders.js : resolutions기준 줌 레벨
+			  crs: L.Proj.CRS.Naver, //Leaflet.KoreanTmsProviders.js : 새로 정의된 Naver Map CRS
+			  worldCopyJump: false,  //https://leafletjs.com/reference-1.3.2.html#map-worldcopyjump 참조    
+        });
+        
+
+        var baseLayers = L.tileLayer.koreaProvider('NaverMap.Street').addTo(map);
+        
+        // var latitude;
+        // var longitude;
+        // navigator.geolocation.getCurrentPosition(function(pos) {
+        //     console.log(pos);
+        //     latitude = pos.coords.latitude;
+        //     longitude = pos.coords.longitude;
+        //     // alert("현재 위치는 : " + latitude + ", "+ longitude);
+        //     alert("현재 위치는 : " + latitude + ", "+ longitude);
+
+        // });
+
+
+
+// type: "01"
+        // var myIcon = {
+        //     plenty: L.divIcon({className: 'plenty'});
+        //     some:  L.divIcon({className: 'some'});
+        //      L.divIcon({className: 'few'});
+        // var myIcon = L.divIcon({className: 'emtpy'});
+
+        
+
+        
+
+
+
+	</script>
+</body>
+
+</html>
