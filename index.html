@@ -77,24 +77,14 @@
             empty:"0~1개"
         }
 
-        // window.onload = function() {
-        var startPos;
-        var geoSuccess = function(position) {
-            startPos = position;
-            console.log(startPos);
-        };
-        navigator.geolocation.getCurrentPosition(geoSuccess);
-        // };
-
-
-        //         addr: "서울특별시 종로구 종로41길 47 (종로6가)"
-// code: "11810050"
-// created_at: "2020/03/10 20:10:00"
-// lat: 37.5733119
-// lng: 127.0058906
-// name: "영화약국"
-// remain_stat: "empty"
-// stock_at: "2020/03/10 09:09:00"
+        //  addr: "서울특별시 종로구 종로41길 47 (종로6가)"
+        // code: "11810050"
+        // created_at: "2020/03/10 20:10:00"
+        // lat: 37.5733119
+        // lng: 127.0058906
+        // name: "영화약국"
+        // remain_stat: "empty"
+        // stock_at: "2020/03/10 09:09:00"
 
         navigator.geolocation.getCurrentPosition(function(pos) {
             console.log(pos);
@@ -120,10 +110,9 @@
                     map.setView(L.latLng(latitude, longitude), 13);
                     for (var i = 0; i < pharms.length; i++) {
                         if (pharms[i].remain_stat) {
-                        console.log(pharms[i].lat, pharms[i].lng)
-                        var circle = L.circle(L.latLng(pharms[i].lat, pharms[i].lng), 12, {color: stateColors[pharms[i].remain_stat], fillColor: stateColors[pharms[i].remain_stat], fillOpacity:0.5}).addTo(map);
-                        var popupContent= "<h3>"+ pharms[i].name + "</h3><p>" + stateMention[pharms[i].remain_stat] + "</p><p> *기준 시간:" + pharms[i].stock_at + "</p>"
-                        circle.bindPopup(popupContent).openPopup();
+                            var circle = L.circle(L.latLng(pharms[i].lat, pharms[i].lng), 12, {color: stateColors[pharms[i].remain_stat], fillColor: stateColors[pharms[i].remain_stat], fillOpacity:0.5}).addTo(map);
+                            var popupContent= "<h3>"+ pharms[i].name + "</h3><p>" + stateMention[pharms[i].remain_stat] + "</p><p> *기준 시간:" + pharms[i].stock_at + "</p>"
+                            circle.bindPopup(popupContent).openPopup();
                         }
                     }
                 }   
@@ -140,33 +129,6 @@
         
 
         var baseLayers = L.tileLayer.koreaProvider('NaverMap.Street').addTo(map);
-        
-        // var latitude;
-        // var longitude;
-        // navigator.geolocation.getCurrentPosition(function(pos) {
-        //     console.log(pos);
-        //     latitude = pos.coords.latitude;
-        //     longitude = pos.coords.longitude;
-        //     // alert("현재 위치는 : " + latitude + ", "+ longitude);
-        //     alert("현재 위치는 : " + latitude + ", "+ longitude);
-
-        // });
-
-
-
-// type: "01"
-        // var myIcon = {
-        //     plenty: L.divIcon({className: 'plenty'});
-        //     some:  L.divIcon({className: 'some'});
-        //      L.divIcon({className: 'few'});
-        // var myIcon = L.divIcon({className: 'emtpy'});
-
-        
-
-        
-
-
-
 	</script>
 </body>
 
