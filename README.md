@@ -1,19 +1,10 @@
-# Leaflet
+# 마스크 재고 맵
+
+> 현재 위치 기반으로 주변 약국의 마스크 재고를 알려주는 지도
 
 
-![](img/leaflet_logo.png)
-  - leaflet 공식 홈페이지 [https://leafletjs.com/](https://leafletjs.com/)
-  - leaflet version: 1.3.3(Jul 18, 2018 — Leaflet 1.3.3 has been released!)
+**데이터 공개후 한시간 반만에 만들어서 매우 조잡합니다. 참고만 해주세요.**
 
-## 목차
 
-#### 1. 지도
-  - 지도 생성하기
-  - 배경지도 바꾸기
-  - ...
 
-#### 2. 데이터 시각화
-  - ...
 
-### License
-Entire Free
